@@ -1,0 +1,105 @@
+# Arquivos compilados e diretórios de build
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Arquivos de projeto Visual Studio
+.vs/
+.vscode/
+*.csproj.user
+*.sln.user
+*.suo
+*.sln.docstates
+
+# Arquivos de IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Arquivos de dependências NuGet
+packages/
+.nuget/
+
+# Arquivos de cache
+.cache/
+*.cache
+
+# Logs
+logs/
+*.log
+
+# Arquivos temporários
+tmp/
+temp/
+
+# Diretórios de output de testes
+TestResults/
+
+# Arquivo de configuração local com credenciais
+appsettings.local.json
+appsettings.development.local.json
+appsettings.secrets.json
+appsettings.secrets.example.json
+
+# Variáveis de ambiente
+.env.local
+.env
+
+# User Secrets do .NET (armazenados no sistema local)
+# Nota: O arquivo secrets.json é armazenado em:
+# Windows: %APPDATA%\Microsoft\UserSecrets\[UserSecretsId]\secrets.json
+# Linux/Mac: ~/.microsoft/usersecrets/[UserSecretsId]/secrets.json
+
+# Arquivos específicos do sistema operacional
+Thumbs.db
+.DS_Store
+*.o
+*.a
+
+# Diretórios de publish
+publish/
+PublishProfiles/
+
+# ReSharper files
+_ReSharper*/
+*.resharper
+.resharper
+.resharper.user
+
+# Coverage files
+coverage/
+*.coverage
+
+# Visual Studio profiler
+*.psess
+*.vsp
+
+# Test adapter cache
+.vs/
+Thumbs.db
+.DS_Store
+*.o
+*.a
+
+# Diretórios de publish
+publish/
+PublishProfiles/
+
+# Resharper files
+_ReSharper*/
+*.resharper
+
+# ReSharper specific files
+.resharper
+.resharper.user
+
+# Coverage files
+coverage/
+*.coverage
+
+# Entity Framework migrations backup
+Migrations/

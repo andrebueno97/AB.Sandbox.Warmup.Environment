@@ -24,3 +24,25 @@ thumbs.db
 node_modules/
 venv/
 __pycache__/
+
+# Ignorar pastas de build e compilação do .NET
+bin/
+obj/
+*.dll
+*.exe
+*.pdb
+
+# Ignorar arquivos de projeto Visual Studio / VS Code
+.vs/
+*.csproj.user
+*.sln.user
+*.suo
+
+# Ignorar diretório de cache NuGet
+.nuget/
+
+# Ignorar arquivos de configuração local e secrets do .NET
+appsettings.local.json
+appsettings.development.local.json
+appsettings.secrets.json
+appsettings.secrets.example.json
