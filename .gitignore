@@ -1,0 +1,26 @@
+# Ignorar o arquivo .env com credenciais sensíveis
+.env
+
+# Ignorar arquivos de dados gerados pelo Docker Compose
+# Para PostgreSQL
+postgres_data/
+
+# Para Redis
+redis_data/
+
+# Ignorar pastas de cache e logs (se houver)
+cache/
+logs/
+
+# Ignorar arquivos e pastas específicos do sistema operacional
+.DS_Store
+thumbs.db
+
+# Ignorar arquivos e pastas de IDEs (ex: VS Code)
+.vscode/
+.idea/
+
+# Ignorar pacotes de dependências (se você tiver algum projeto que instale dependências localmente)
+node_modules/
+venv/
+__pycache__/
