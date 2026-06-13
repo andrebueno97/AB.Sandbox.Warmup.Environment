@@ -64,9 +64,15 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
     public async Task DeleteAsync(Guid id)
     {
-        const string query = "DELETE FROM users WHERE id = @Id";
+        // const string query = "DELETE FROM users WHERE id = @Id";
         
-        using var connection = _dbConnectionFactory.CreateConnection();
-        await connection.ExecuteAsync(query, new { Id = id });
+        // using var connection = _dbConnectionFactory.CreateConnection();
+        // await connection.ExecuteAsync(query, new { Id = id });
+
+        var user = GetByIdAsync(id).Result;
+        if (user == null) return;
+
+        user.DeletedAt = DateTime.UtcNow;
+        await UpdateAsync(user);
     }
 }
