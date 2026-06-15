@@ -23,6 +23,7 @@ builder.Services.AddScoped<CreateUserCommandHandler>();
 builder.Services.AddScoped<UpdateUserCommandHandler>();
 builder.Services.AddScoped<DeleteUserCommandHandler>();
 builder.Services.AddScoped<GetAllUsersQueryHandler>();
+builder.Services.AddScoped<GetUserQueryHandler>();
 
 var app = builder.Build();
 

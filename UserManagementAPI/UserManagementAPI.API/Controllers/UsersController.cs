@@ -10,12 +10,14 @@ public class UsersController(
     CreateUserCommandHandler createUserCommandHandler,
     UpdateUserCommandHandler updateUserCommandHandler,
     DeleteUserCommandHandler deleteUserCommandHandler,
-    GetAllUsersQueryHandler getAllUsersQueryHandler) : ControllerBase
+    GetAllUsersQueryHandler getAllUsersQueryHandler,
+    GetUserQueryHandler getUserQueryHandler) : ControllerBase
 {
     private readonly CreateUserCommandHandler _createUserCommandHandler = createUserCommandHandler;
     private readonly UpdateUserCommandHandler _updateUserCommandHandler = updateUserCommandHandler;
     private readonly DeleteUserCommandHandler _deleteUserCommandHandler = deleteUserCommandHandler;
     private readonly GetAllUsersQueryHandler _getAllUsersQueryHandler = getAllUsersQueryHandler;
+    private readonly GetUserQueryHandler _getUserQueryHandler = getUserQueryHandler;
 
     /// <summary>
     /// Cria um novo usuário no sistema.
@@ -84,14 +86,21 @@ public class UsersController(
     }
 
     /// <summary>
-    /// Obtém um usuário específico (placeholder para futura implementação).
+    /// Obtém um usuário específico.
     /// </summary>
     /// <param name="id">ID do usuário</param>
     /// <returns>Dados do usuário</returns>
     [HttpGet("{id}")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public ActionResult<object> GetUser(Guid id)
+    public async Task<ActionResult<object>> GetUser(Guid id)
     {
-        return NotFound();
+        var user = await _getUserQueryHandler.HandleAsync(new GetUserQuery(id));
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { user.Id, user.Name, user.Username, user.CreatedAt, user.UpdatedAt });
     }
 }
