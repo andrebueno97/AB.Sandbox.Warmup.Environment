@@ -20,6 +20,8 @@ builder.Services.AddSingleton<IDbConnectionFactory>(new DbConnectionFactory(conn
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<CreateUserCommandHandler>();
+builder.Services.AddScoped<UpdateUserCommandHandler>();
+builder.Services.AddScoped<DeleteUserCommandHandler>();
 builder.Services.AddScoped<GetAllUsersQueryHandler>();
 
 var app = builder.Build();

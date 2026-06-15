@@ -6,9 +6,15 @@ using UserManagementAPI.Application.Queries;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController(CreateUserCommandHandler createUserCommandHandler, GetAllUsersQueryHandler getAllUsersQueryHandler) : ControllerBase
+public class UsersController(
+    CreateUserCommandHandler createUserCommandHandler,
+    UpdateUserCommandHandler updateUserCommandHandler,
+    DeleteUserCommandHandler deleteUserCommandHandler,
+    GetAllUsersQueryHandler getAllUsersQueryHandler) : ControllerBase
 {
     private readonly CreateUserCommandHandler _createUserCommandHandler = createUserCommandHandler;
+    private readonly UpdateUserCommandHandler _updateUserCommandHandler = updateUserCommandHandler;
+    private readonly DeleteUserCommandHandler _deleteUserCommandHandler = deleteUserCommandHandler;
     private readonly GetAllUsersQueryHandler _getAllUsersQueryHandler = getAllUsersQueryHandler;
 
     /// <summary>
@@ -36,6 +42,45 @@ public class UsersController(CreateUserCommandHandler createUserCommandHandler, 
         var users = await _getAllUsersQueryHandler.HandleAsync(new GetAllUsersQuery());
         var userDtos = users.Select(u => new { u.Id, u.Name, u.Username, u.CreatedAt, u.UpdatedAt });
         return Ok(userDtos);
+    }
+
+    /// <summary>
+    /// Atualiza parcialmente os dados de um usuário.
+    /// </summary>
+    /// <param name="id">ID do usuário</param>
+    /// <param name="command">Campos do usuário a serem atualizados (Name, Username, Password)</param>
+    /// <returns>Dados atualizados do usuário</returns>
+    [HttpPatch("{id}")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<object>> PatchUser(Guid id, [FromBody] UpdateUserCommand command)
+    {
+        var user = await _updateUserCommandHandler.HandleAsync(id, command);
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(new { user.Id, user.Name, user.Username, user.CreatedAt, user.UpdatedAt });
+    }
+
+    /// <summary>
+    /// Remove um usuário do sistema.
+    /// </summary>
+    /// <param name="id">ID do usuário</param>
+    /// <returns>Sem conteúdo quando o usuário é removido</returns>
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteUser(Guid id)
+    {
+        var deleted = await _deleteUserCommandHandler.HandleAsync(new DeleteUserCommand(id));
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
     }
 
     /// <summary>

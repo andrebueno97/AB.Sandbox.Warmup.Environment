@@ -11,7 +11,17 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
     public async Task<User?> GetByIdAsync(Guid id)
     {
-        const string query = "SELECT id, name, username, password_hash, created_at, updated_at FROM users WHERE id = @Id";
+        const string query = @"
+            SELECT
+                id AS Id,
+                name AS Name,
+                username AS Username,
+                password_hash AS PasswordHash,
+                created_at AS CreatedAt,
+                updated_at AS UpdatedAt,
+                deleted_at AS DeletedAt
+            FROM users
+            WHERE id = @Id AND deleted_at IS NULL";
         
         using var connection = _dbConnectionFactory.CreateConnection();
         return await connection.QueryFirstOrDefaultAsync<User>(query, new { Id = id });
@@ -19,7 +29,17 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
     public async Task<User?> GetByUsernameAsync(string username)
     {
-        const string query = "SELECT id, name, username, password_hash, created_at, updated_at FROM users WHERE username = @Username";
+        const string query = @"
+            SELECT
+                id AS Id,
+                name AS Name,
+                username AS Username,
+                password_hash AS PasswordHash,
+                created_at AS CreatedAt,
+                updated_at AS UpdatedAt,
+                deleted_at AS DeletedAt
+            FROM users
+            WHERE username = @Username AND deleted_at IS NULL";
         
         using var connection = _dbConnectionFactory.CreateConnection();
         return await connection.QueryFirstOrDefaultAsync<User>(query, new { Username = username });
@@ -27,7 +47,18 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
     public async Task<IEnumerable<User>> GetAllAsync()
     {
-        const string query = "SELECT id, name, username, password_hash, created_at, updated_at FROM users ORDER BY created_at DESC";
+        const string query = @"
+            SELECT
+                id AS Id,
+                name AS Name,
+                username AS Username,
+                password_hash AS PasswordHash,
+                created_at AS CreatedAt,
+                updated_at AS UpdatedAt,
+                deleted_at AS DeletedAt
+            FROM users
+            WHERE deleted_at IS NULL
+            ORDER BY created_at DESC";
         
         using var connection = _dbConnectionFactory.CreateConnection();
         return await connection.QueryAsync<User>(query);
@@ -55,7 +86,11 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
         const string query = @"
             UPDATE users 
-            SET name = @Name, username = @Username, password_hash = @PasswordHash, updated_at = @UpdatedAt
+            SET name = @Name,
+                username = @Username,
+                password_hash = @PasswordHash,
+                updated_at = @UpdatedAt,
+                deleted_at = @DeletedAt
             WHERE id = @Id";
 
         using var connection = _dbConnectionFactory.CreateConnection();
@@ -64,13 +99,11 @@ public class UserRepository(IDbConnectionFactory dbConnectionFactory) : IUserRep
 
     public async Task DeleteAsync(Guid id)
     {
-        // const string query = "DELETE FROM users WHERE id = @Id";
-        
-        // using var connection = _dbConnectionFactory.CreateConnection();
-        // await connection.ExecuteAsync(query, new { Id = id });
-
-        var user = GetByIdAsync(id).Result;
-        if (user == null) return;
+        var user = await GetByIdAsync(id);
+        if (user is null)
+        {
+            return;
+        }
 
         user.DeletedAt = DateTime.UtcNow;
         await UpdateAsync(user);
